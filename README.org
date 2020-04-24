@@ -1,0 +1,44 @@
+#+TITLE: Red Black Trees Overview
+#+DESCRIPTION: An overview of red black trees, their properties, rotation and insertion, and possible classes and methods needed to implement the tree
+
+* Binary Search Tree Properties
+  - Order, or sorted, binary trees
+  - Nodes can have 2 subtrees
+  - Items to the left of a given node are smaller
+  - Items to the right of a given node are larger
+** Time Complexity
+   - Can have a large time complexity, since it is just a list in certain situations
+   - O(n)
+* Red Black Tree Properties
+  - Nodes are Red or Black
+  - The root and *leaves* (nil children) are black
+  - If a node is red, then its children are black
+  - Paths from a node to nil contain the same # of black nodes
+** Time Complexity 
+   - Olog(n)
+** Rotations
+   - Goal is to decrease the height to satisfy properties
+   - Larger subtrees up, smaller subtrees down
+*** Left-Rotation
+    - Bigger subtrees go up
+    - So the node's right subtree becomes the node's parent
+    - And the right subtree's left subtree becomes the node's new right subtree
+*** Right-Rotation
+    - Smaller subtrees go up
+    - So the node's left subtee becomes the node's parent
+    - Then the left subtree's right subtree becomes the node's new left subtree
+** Insertion
+   Always add in nodes as red. There are a few different cases when adding.
+   1) Adding to root
+      - Red becomes black
+   2) Parent is black
+      - Then we're done
+   3) Parent and Uncle are red
+      - Change parent and uncle to black
+      - Change grandparent to red
+      - Recursively call on grandparent (review all cases)
+   4) Uncle is black, parent is left and node is right or parent is right and node is left ( triangle )
+      - Tree rotation through parent
+   5) Uncle is black, parent is left and node is left or parent is right and node is right ( triangle )
+      - Rotate through grandparent
+      - Switch parent and grandparent colors
