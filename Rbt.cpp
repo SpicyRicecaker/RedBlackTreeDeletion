@@ -4,7 +4,7 @@
 #include "Node.h"
 
 void getInput(char* in); //Gets console input, stores into char* in
-void read(Node* &root, char* in); //Gets file input, stores into char* in, sequentially adds into rbt
+void read(Node* &root, char* in, int type); //Gets file input, stores into char* in, sequentially adds into rbt
 int getAction(char* in); //Gets input and returns a specific number corresponding to an action
 void insert(Node* &root, int toAdd); //Insert int into tree 
 void find(Node* &current, int toAdd); //Actually finds the place to insert node 
@@ -17,6 +17,7 @@ void correctCase4Step2(Node* &current); //Paren is red and Uncle is black, line 
 void add(Node* &current, char* in); //Enter a number, which gets insert()ed into tree
 void print(Node* current, int depth); //Prints the tree
 void help(); //Prints list of commands
+int getInputType(char* in); //Asks user for whether they want file input or input from the console
 
 using namespace std;
 
@@ -33,7 +34,7 @@ int main(){
   bool running = true;
   while(running){
     //Ask user for their file name input, and input into tree
-    read(root, in);
+    read(root, in, getInputType(in));
 
     cout << "Now entering the modding tree phase! Enter \"help\" for a list of commands." << endl;
     //Editing tree loop
@@ -94,22 +95,28 @@ void getInput(char* in){
 }
 
 //This function asks for file input name and sets the in variable equal to it
-void read(Node* &root, char* in){
+void read(Node* &root, char* in, int type){
   //New file strem
   ifstream stream;
-  while(true){
-    cout << "Please enter the name of your file." << endl;
-    getInput(in);
-    //Open file
-    stream.open(in);
-    //Make sure that the file name is correct
-    if(stream.good()){
-      //If so, read and put into in
-      stream.getline(in, 999);
-      break;
+  if(type == 1){
+    while(true){
+      cout << "Please enter the name of your file." << endl;
+      getInput(in);
+      //Open file
+      stream.open(in);
+      //Make sure that the file name is correct
+      if(stream.good()){
+        //If so, read and put into in
+        stream.getline(in, 999);
+        break;
+      }
+      //Otherwise do over
+      cout << "File not found. Please make sure your file name is correct." << endl;
     }
-    //Otherwise do over
-    cout << "File not found. Please make sure your file name is correct." << endl;
+  }else{
+    //Get console input
+    cout << "Please enter your input then." << endl;
+    getInput(in);
   }
   //Split input, convert into int, then call insertion
   char* buffer = new char[4];
@@ -334,4 +341,21 @@ void correctCase4Step2(Node* &current){
   //Recolor everything, swap parent and grandparent colors
   parent->setColor(true);
   grandParent->setColor(false);
+}
+
+//A function that asks the user whether they would like to input their data through files or a tree
+int getInputType(char* in){
+  cout << "Please enter (1) for file input, or (2) for console input." << endl;
+  while(true){
+    getInput(in);
+    //If they chose file input return 1
+    if(strcmp(in, (char*)"1") == 0){
+      return 1;
+      //If they chose console input return 2
+    }else if(strcmp(in, (char*)"2") == 0){
+      return 2;
+    }
+    //Otherwise prompt them to choose again
+    cout << "Please enter (1) or (2)" << endl;
+  }
 }
