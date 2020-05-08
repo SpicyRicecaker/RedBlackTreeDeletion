@@ -21,6 +21,7 @@ int getInputType(char* in); //Asks user for whether they want file input or inpu
 void search(Node* root, char* in); //Asks user to enter a number, and returns whether it is in the tree, or the number of occurences
 bool checkOccurence(Node* current, int tosearch); //Returns true if the number is in the tree and false if it is not
 void remove(Node* &current, char* in); //Asks user to enter a number, and that number in the tree
+void findRemove(Node* &past, Node* &current, int toDelete);
 
 
 using namespace std;
@@ -408,8 +409,11 @@ bool checkOccurence(Node* current, int toSearch){
 
 //Asks user to enter a number, and returns the number of occurences in the tree
 void search(Node* root, char* in){
+  //Prompt user to input number to be searched
   cout << "Please enter the number to be searched" << endl;
+  //Store into in
   getInput(in);
+  //Convert in to int and check occurences
   if(checkOccurence(root, atoi(in))){
     cout << "\"" << in << "\"" << " is present in this tree." << endl;
   }else{
@@ -419,5 +423,168 @@ void search(Node* root, char* in){
 
 //Asks user to enter a number, and deletes that number in the tree/
 void remove(Node* &current, char* in){
+  //First we need to ask user for the number to remove
+  cout << "Please enter the number to remove" << endl;
+  //Store into in
+  getInput(in);
+  //Convert in to int and perform BST copy on it
   cout << "We're in remove yayyy" << endl;
+}
+
+//Deletes all numbers of a specified value. Kept getting errors if you don't actually store the present
+void findRemove(Node* &past, Node* &current, int toDelete){
+  //Let's think through this logically.
+  //First we actually have to find the number to delete.
+  int inQuestion = current->getValue();
+  Node* left = current->getLeft();
+  Node* right = current->getRight();
+  //If node is less than search number
+  if(toDelete < inQuestion){
+    //Check if there is a left node
+    if(left != NULL){
+      findRemove(current, left, toDelete);
+    }else{
+      return;
+    }
+  }
+  //If node is equal to search number
+  if(toDelete == inQuestion){
+    //There are three possible cases
+    //One is that there are no children
+    if(left == NULL && right == NULL){
+      //If we're dealing with the root node
+      if(past == current){
+        delete current;
+        current = NULL;
+        return;
+      }
+      //Then we have to find which child the current deleted node is
+      if(past->getLeft() == current){
+        past->setLeft(NULL);
+      }else{
+        past->setRight(NULL);
+      }
+      //Then get rid of the node
+      delete current;
+      current = NULL;
+      return;
+    }
+    //One is that there is one child
+    //First we have to figure out if the current node is the right or left node
+    //We just have to swap the parent with the child
+    //If there are left children
+    if((left != NULL && right == NULL)){
+      //If we're dealing with the root case
+      if(past == current){
+        //Set the root to the left
+        delete current;
+        current = left;
+        return;
+      }
+      //Check if our current is the right or left child of the past
+      if(past->getRight() == current){
+        //If it's the right, then swap the parent's right with current left
+        past->setRight(left);
+        delete current;
+        current = NULL;
+      }else{
+        //If it's the left, then swap the parent's right with current left
+        past->setLeft(left);
+        delete current;
+        current = NULL;
+      }
+      return;
+      //If there are right children
+    }else if((left == NULL && right != NULL)){
+      //If we're dealing with the root case
+      if(past == current){
+        //Set the root to the right
+        delete current;
+        current = right;
+        return;
+      }
+      //Check if our current is the right or left child of the past
+      if(past->getRight() == current){
+        //If it's the right, then swap the parent's right with current right
+        past->setRight(right);
+        delete current;
+        current = NULL;
+      }else{
+        //If it's the left, then swap the parent's right with current right
+        past->setLeft(right);
+        delete current;
+        current = NULL;
+      }
+      return;
+    //If there are two children
+    }else{
+      //Then we'll first need to find the next "smallest" or "biggest" node.
+      //We'll implement the smallest this time. This means the the next node to the left, and the farthest to the right
+
+      //Start at the left node
+      Node* parent = left;
+      Node* child = left;
+      //Keep going until the very right is reached, keeping track of the parent
+      while(child->getRight() != NULL){
+        //Parent is child, and child is next right
+        parent = child;
+        child = child->getRight();
+      }
+      //So first the parent and child relationship must be broken off
+      parent->setRight(NULL);
+      //Even if there are no children, this should be fine.
+      //Next, we have to replace the current with the child.
+
+      //Be wary of root case!
+      if(past == current){
+        //Then we have to ensure the original root's right and left child is preserved, so tie the current child to that right child and left child
+        child->setRight(current->getRight());
+        //However, what if we have a case where we're tying the next left to the node itself? Well, just check it then!
+        if(current->getLeft() != child){
+          child->setLeft(current->getLeft());
+        }
+        delete current;
+        current = child;
+        return;
+      }
+      //If it's not a root case, then much of the same thing occurs, except we have to take into account the "past" node
+      //We have to figure out if the "current" node is the right or left of it's parent
+      //If the current is to the right, just keep that in mind when we're swapping
+      if(past->getRight() == current){
+        //We still have to ensure that the original root's right and left child are preserved
+        child->setRight(current->getRight());
+        if(current->getLeft() != child){
+          child->setLeft(current->getLeft());
+        }
+        //Set the current equal to the child
+        delete current;
+        current = child;
+        //Then tie in the past to the current
+        past->setRight(child);
+        return;
+        //If the current is to the left, just keep that in mind also
+      }else{
+        //We still have to ensure that the original root's right and left child are preserved
+        child->setRight(current->getRight());
+        if(current->getLeft() != child){
+          child->setLeft(current->getLeft());
+        }
+        //Set the current equal to the child
+        delete current;
+        current = child;
+        //Then tie in the past to the current
+        past->setLeft(child);
+        return;
+      }
+    }
+  }
+
+  //If node is greater than search number
+  if(toDelete > inQuestion){
+    if(right != NULL){
+      findRemove(current, right, toDelete);
+    }else{
+      return;
+    }
+  }
 }
