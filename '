@@ -653,45 +653,41 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
 
 
 
-
+        
         //RBT REMOVED CODE
 
 
 
-
-        ////If it's not a root case, then much of the same thing occurs, except we have to take into account the "past" node
-        ////We have to figure out if the "current" node is the right or left of it's parent
-        ////If the current is to the right, just keep that in mind when we're swapping
-        //if(past->getRight() == current){
-        //  //We still have to ensure that the original root's right and left child are preserved
-        //  child->setRight(current->getRight());
-        //  if(current->getLeft() != child){
-        //    child->setLeft(current->getLeft());
-        //  }
-        //  //Set the current equal to the child
-        //  delete current;
-        //  current = child;
-        //  //Then tie in the past to the current
-        //  past->setRight(child);
-        //  return;
-        //  //If the current is to the left, just keep that in mind also
-        //}else{
-        //  //We still have to ensure that the original root's right and left child are preserved
-        //  child->setRight(current->getRight());
-        //  if(current->getLeft() != child){
-        //    child->setLeft(current->getLeft());
-        //  }
-        //  //Set the current equal to the child
-        //  delete current;
-        //  current = child;
-        //  //Then tie in the past to the current
-        //  past->setLeft(child);
-        //  return;
-        //}
-
-
-
-        //END OF RBT REMOVED CODE
+        
+        //If it's not a root case, then much of the same thing occurs, except we have to take into account the "past" node
+        //We have to figure out if the "current" node is the right or left of it's parent
+        //If the current is to the right, just keep that in mind when we're swapping
+        if(past->getRight() == current){
+          //We still have to ensure that the original root's right and left child are preserved
+          child->setRight(current->getRight());
+          if(current->getLeft() != child){
+            child->setLeft(current->getLeft());
+          }
+          //Set the current equal to the child
+          delete current;
+          current = child;
+          //Then tie in the past to the current
+          past->setRight(child);
+          return;
+          //If the current is to the left, just keep that in mind also
+        }else{
+          //We still have to ensure that the original root's right and left child are preserved
+          child->setRight(current->getRight());
+          if(current->getLeft() != child){
+            child->setLeft(current->getLeft());
+          }
+          //Set the current equal to the child
+          delete current;
+          current = child;
+          //Then tie in the past to the current
+          past->setLeft(child);
+          return;
+        }
       }
     }
 
@@ -704,8 +700,3 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
       }
     }
   }
-  //RBT ADDED CODE
-  //HOPEFULLY THIS NEVER HAPPENS, I HOPE THIS DOESN'T SCREW UP ANYTHING THX
-  return new Node*[2]{NULL, NULL};
-  //END OF RBT ADDED CODE
-}
