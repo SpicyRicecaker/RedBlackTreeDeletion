@@ -427,11 +427,11 @@ void remove(Node* &current, char* in){
   cout << "Please enter the number to remove" << endl;
   //Store into in
   getInput(in);
-  //Convert in to int and perform BST copy on it
-  cout << "We're in remove yayyy" << endl;
+  //Make sure that the node to delete actually exists
+  findRemove(current, current, atoi(in));
 }
 
-//Deletes all numbers of a specified value. Kept getting errors if you don't actually store the present
+//Finds the spot to delete the node, and also finds the next node to delete????
 void findRemove(Node* &past, Node* &current, int toDelete){
   //Let's think through this logically.
   //First we actually have to find the number to delete.
