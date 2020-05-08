@@ -18,9 +18,9 @@ void add(Node* &current, char* in); //Enter a number, which gets insert()ed into
 void print(Node* current, int depth); //Prints the tree
 void help(); //Prints list of commands
 int getInputType(char* in); //Asks user for whether they want file input or input from the console
-void search(); //Asks user to enter a number, and returns whether it is in the tree, or the number of occurences
-void findOccurences(Node* current, int tosearch, int occurences); //Returns the number of occurences of a number in a tree
-void remove(); //Asks user to enter a number, and deletes all instances of that number in the tree
+void search(Node* root, char* in); //Asks user to enter a number, and returns whether it is in the tree, or the number of occurences
+bool checkOccurence(Node* current, int tosearch); //Returns true if the number is in the tree and false if it is not
+void remove(Node* &current, char* in); //Asks user to enter a number, and that number in the tree
 
 
 using namespace std;
@@ -65,6 +65,14 @@ int main(){
         cout << "Thank you for choosing bubbles!" << endl;
         moddingTree = false;
         break;
+      case 6:
+        //Search
+        search(root, in);
+        break;
+      case 7:
+        //Remove
+        remove(root, in);
+        break;
       }
     }
     //Prompt user if they want to start the program over
@@ -94,7 +102,7 @@ void getInput(char* in){
     if(strcmp(in, "") != 0){
       break;
     }
-    cout << "Please enter something..." << endl;
+    cout << "No input detected...please enter something" << endl;
   }
 }
 
@@ -160,6 +168,10 @@ int getAction(char* in){
       return 4;
     }else if(strcmp(in, "QUIT") == 0){
       return 5;
+    }else if(strcmp(in, "SEARCH") == 0){
+      return 6;
+    }else if(strcmp(in, "REMOVE") == 0){
+      return 7;
     }
     cout << "\"" << in << "\" is not recognized as a command. Please type \"help\" for a list of commands!" << endl;
   }
@@ -321,7 +333,6 @@ void correctCase4(Node* &current){
     parent->rotateRight();
     current = current->getRight();
   }
-
   //Then see if we need to consider the line case and rotate the grandparent
   Node* t = current;
   correctCase4Step2(t);
@@ -365,37 +376,48 @@ int getInputType(char* in){
 }
 
 //Searches for if a number is in the tree
-int findOccurences(Node* current, int toSearch, int occurences){
-  int inQuestion = bubby->getValue();
-  Node* left = bubby->getLeft();
-  Node* right = bubby->getRight();
+bool checkOccurence(Node* current, int toSearch){
+  int inQuestion = current->getValue();
+  Node* left = current->getLeft();
+  Node* right = current->getRight();
   //If node is less than search number
   if(toSearch < inQuestion){
     //Check if there is a left node
     if(left != NULL){
-      return bubbleScry(left, toSearch, boba);
+      return checkOccurence(left, toSearch);
     }else{
-      return boba;
+      return false;
     }
   }
   //If node is equal to search number
   if(toSearch == inQuestion){
-    ++boba;
-    if(left == NULL){
-      return boba;
-    }else{
-      return bubbleScry(left, toSearch, boba);
-    }
+    return true;
   }
 
   //If node is greater than search number
   if(toSearch > inQuestion){
     if(right != NULL){
-      return bubbleScry(right, toSearch, boba);
+      return checkOccurence(right, toSearch);
     }else{
-      return boba;
+      return false;
     }
   }
   //Should never happen?
-  return -1;
+  return false;
+}
+
+//Asks user to enter a number, and returns the number of occurences in the tree
+void search(Node* root, char* in){
+  cout << "Please enter the number to be searched" << endl;
+  getInput(in);
+  if(checkOccurence(root, atoi(in))){
+    cout << "\"" << in << "\"" << " is present in this tree." << endl;
+  }else{
+    cout << "Could not find any occurences of \"" << in << "\"" << " in this tree." << endl;
+  }
+}
+
+//Asks user to enter a number, and deletes that number in the tree/
+void remove(Node* &current, char* in){
+  cout << "We're in remove yayyy" << endl;
 }
