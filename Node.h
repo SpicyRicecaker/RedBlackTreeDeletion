@@ -14,6 +14,7 @@ class Node {
   void setRight(Node*);
   Node* getParent();
   void setParent(Node*);
+  Node* getSibling();
   Node* getGrandParent();
   Node* getUncle();
   bool getColor();

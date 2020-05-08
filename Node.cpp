@@ -58,25 +58,33 @@ void Node::setParent(Node* newParent){
   parent = newParent;
 }
 
+//Getters for sibling
+Node* Node::getSibling(){
+  //First get parent
+  Node* p = this->getParent();
+  //If NULL
+  if(p == NULL){
+    //Return NULL
+    return NULL;
+  }else{
+    //Otherwise return the parent's child that is not this node
+    if(p->getLeft()==this){
+      return p->getRight();
+    }else{
+      return p->getLeft();
+    }
+  }
+}
+
 //Getters for grandparent
 Node* Node::getGrandParent(){
+  //Parent's parent
   return this->getParent()->getParent();
 }
 
 //Getters for uncle
-//This is pretty scuffed. In RBT deletion we'll swap from this to parent get sibling
 Node* Node::getUncle(){
-  Node* grandParent = this->getGrandParent();
-  //If the grandparent isn't null
-  if(grandParent != NULL){
-    //Return the opposite of what isn't the parent of parent
-    if(grandParent->getLeft() == parent){
-      return grandParent->getRight();
-    }else{
-      return grandParent->getLeft();
-    }
-  }
-  return NULL;
+  return this->getParent()->getSibling();
 }
 
 
