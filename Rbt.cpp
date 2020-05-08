@@ -22,6 +22,7 @@ void search(Node* root, char* in); //Asks user to enter a number, and returns wh
 bool checkOccurence(Node* current, int tosearch); //Returns true if the number is in the tree and false if it is not
 void remove(Node* &current, char* in); //Asks user to enter a number, and that number in the tree
 Node** findRemove(Node* &past, Node* &current, int toDelete);
+void replaceNode(Node* N, Node* C); //Tries to swap n with c
 
 
 using namespace std;
@@ -445,6 +446,9 @@ void remove(Node* &current, char* in){
   }else{
     cout << "THE NODE THAT REPLACES IT (C) IS : NULL." << endl;
   }
+
+  //Swaps the nodes
+  replaceNode(temp[0],temp[1]);
 }
 
 //Finds the spot to delete the node, and also finds the next node to delete????
@@ -501,7 +505,7 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
 
       //RBT ADDED CODE
       Node* n = current;
-      Node* c = new Node(-1);
+      Node* c = NULL;
       //END OF RBT ADDED CODE
 
       //RBT CHECK: Q: Do we actually delete anything?
@@ -729,4 +733,29 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
   //HOPEFULLY THIS NEVER HAPPENS, I HOPE THIS DOESN'T SCREW UP ANYTHING THX
   return new Node*[2]{NULL, NULL};
   //END OF RBT ADDED CODE
+}
+
+void replaceNode(Node* N, Node* C) {
+  //I guess if N is NULL we have nothing to do
+  if(N == NULL){
+    return;
+  }
+  //Then if C is NULL, we'll just make a dummy black node for now
+  if(C == NULL){
+    //Make its value -1, an invalid value
+    C = new Node(-1);
+    //Then set its color to black
+    C->setColor(false);
+  }
+  //Set the child's parent to N's current paretn
+  C->setParent(N->getParent());
+  //If N is the left child of its parent
+  if (N == N->getParent()->getLeft()) {
+    //Set the parent's new left to C
+    N->getParent()->setLeft(C);
+  //If N is the right child of its parent
+  } else {
+    //Set the parent's new right to C
+    N->getParent()->setRight(C);
+  }
 }
