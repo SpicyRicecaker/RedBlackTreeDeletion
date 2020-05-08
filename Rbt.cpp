@@ -447,17 +447,42 @@ void findRemove(Node* &past, Node* &current, int toDelete){
       return;
     }
   }
+
+
+
+  /* UPDATE: Here's the rundown for what we need to add for RBT
+   *
+   * 1. First of all, RBT deletion DOES happen. Like how could it not? In the end, we're deleting, and correcting, so don't worry about rewriting the currention deletion code that is already working.
+   *
+   * 2. Instead, we'll have to look at each case below on an individual basis and *decide on the N and it's respective child that we'd like to return...*
+   *
+   * 3. Then tie it into the Wikipedia Red Black Tree code, which utilizes replace node (swapping the location of child and parent) and drives right into delete one child.
+   */
+
+
+
   //If node is equal to search number
   if(toDelete == inQuestion){
     //There are three possible cases
     //One is that there are no children
     if(left == NULL && right == NULL){
+      //RBT CHECK: Q: What does dealing with the root entail in this case?
+      //RBT CHECK: A: Dealing with the root would mean we would
+      //RBT CHECK: Concerns: We might have to add returns here later, since we are going straight into the replace nodes function. This is fine right now though
       //If we're dealing with the root node
       if(past == current){
         delete current;
         current = NULL;
         return;
       }
+      //RBT CHECK: Q: Is deleting the node good in this case?
+      //RBT CHECK: A: Deleting the node is probably ok in this case, but we need to record the $x$ and potential $c$ values first, to return those.
+
+      //RBT ADDED CODE
+      Node* n = current;
+      Node* c = new Node(-1);
+      //END OF RBT ADDED CODE
+
       //Then we have to find which child the current deleted node is
       if(past->getLeft() == current){
         past->setLeft(NULL);
@@ -516,7 +541,7 @@ void findRemove(Node* &past, Node* &current, int toDelete){
         current = NULL;
       }
       return;
-    //If there are two children
+      //If there are two children
     }else{
       //Then we'll first need to find the next "smallest" or "biggest" node.
       //We'll implement the smallest this time. This means the the next node to the left, and the farthest to the right
