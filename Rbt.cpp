@@ -18,6 +18,10 @@ void add(Node* &current, char* in); //Enter a number, which gets insert()ed into
 void print(Node* current, int depth); //Prints the tree
 void help(); //Prints list of commands
 int getInputType(char* in); //Asks user for whether they want file input or input from the console
+void search(); //Asks user to enter a number, and returns whether it is in the tree, or the number of occurences
+void findOccurences(Node* current, int tosearch, int occurences); //Returns the number of occurences of a number in a tree
+void remove(); //Asks user to enter a number, and deletes all instances of that number in the tree
+
 
 using namespace std;
 
@@ -358,4 +362,40 @@ int getInputType(char* in){
     //Otherwise prompt them to choose again
     cout << "Please enter (1) or (2)" << endl;
   }
+}
+
+//Searches for if a number is in the tree
+int findOccurences(Node* current, int toSearch, int occurences){
+  int inQuestion = bubby->getValue();
+  Node* left = bubby->getLeft();
+  Node* right = bubby->getRight();
+  //If node is less than search number
+  if(toSearch < inQuestion){
+    //Check if there is a left node
+    if(left != NULL){
+      return bubbleScry(left, toSearch, boba);
+    }else{
+      return boba;
+    }
+  }
+  //If node is equal to search number
+  if(toSearch == inQuestion){
+    ++boba;
+    if(left == NULL){
+      return boba;
+    }else{
+      return bubbleScry(left, toSearch, boba);
+    }
+  }
+
+  //If node is greater than search number
+  if(toSearch > inQuestion){
+    if(right != NULL){
+      return bubbleScry(right, toSearch, boba);
+    }else{
+      return boba;
+    }
+  }
+  //Should never happen?
+  return -1;
 }
