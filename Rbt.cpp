@@ -428,7 +428,23 @@ void remove(Node* &current, char* in){
   //Store into in
   getInput(in);
   //Make sure that the node to delete actually exists
-  findRemove(current, current, atoi(in));
+
+  cout << "ROOT NODE" << current->getValue() << endl;
+  cout << "VALUE TO DELETE" << atoi(in) << endl;
+
+  Node** temp = findRemove(current, current, atoi(in));
+
+  if(temp[0]!=NULL){
+    cout << "THE NODE TO DELETE (N) IS : " << (temp[0])->getValue() << "." << endl;
+  }else{
+    cout << "THE NODE TO DELETE (N) IS : NULL." << endl;
+  }
+
+  if(temp[1]!=NULL){
+    cout << "THE NODE THAT REPLACES IT (C) IS : " << (temp[1])->getValue() << "." << endl;
+  }else{
+    cout << "THE NODE THAT REPLACES IT (C) IS : NULL." << endl;
+  }
 }
 
 //Finds the spot to delete the node, and also finds the next node to delete????
@@ -440,268 +456,273 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
   Node* right = current->getRight();
   //If node is less than search number
   if(toDelete < inQuestion){
+    cout << "LESS" << endl;
     //Check if there is a left node
     if(left != NULL){
-      findRemove(current, left, toDelete);
+      cout << "RECURSES LEFT" << endl;
+      return findRemove(current, left, toDelete);
     }else{
+      cout << "WE're DONE" << endl;
       return new Node*[2]{NULL, NULL};
     }
+  }
 
 
 
-    /* UPDATE: Here's the rundown for what we need to add for RBT
-     *
-     * 1. First of all, RBT deletion DOES happen. Like how could it not? In the end, we're deleting, and correcting, so don't worry about rewriting the currention deletion code that is already working.
-     *
-     * 2. Instead, we'll have to look at each case below on an individual basis and *decide on the N and it's respective child that we'd like to return...*
-     *
-     * 3. Then tie it into the Wikipedia Red Black Tree code, which utilizes replace node (swapping the location of child and parent) and drives right into delete one child.
-     */
+  /* UPDATE: Here's the rundown for what we need to add for RBT
+   *
+   * 1. First of all, RBT deletion DOES happen. Like how could it not? In the end, we're deleting, and correcting, so don't worry about rewriting the currention deletion code that is already working.
+   *
+   * 2. Instead, we'll have to look at each case below on an individual basis and *decide on the N and it's respective child that we'd like to return...*
+   *
+   * 3. Then tie it into the Wikipedia Red Black Tree code, which utilizes replace node (swapping the location of child and parent) and drives right into delete one child.
+   */
 
 
 
-    //If node is equal to search number
-    if(toDelete == inQuestion){
-      //There are three possible cases
-      //One is that there are no children
-      if(left == NULL && right == NULL){
-        //RBT CHECK: Q: What does dealing with the root entail in this case?
-        //RBT CHECK: A: Dealing with the root would mean we would
-        //RBT CHECK: Concerns: We might have to add returns here later, since we are going straight into the replace nodes function. This is fine right now though
-        //If we're dealing with the root node
-        if(past == current){
-          delete current;
-          current = NULL;
-          return new Node*[2]{NULL, NULL};
-        }
-        //RBT CHECK: Q: Is deleting the node good in this case?
-        //RBT CHECK: A: Deleting the node is probably ok in this case, but we need to record the $x$ and potential $c$ values first, to return those.
+  //If node is equal to search number
+  if(toDelete == inQuestion){
+    //There are three possible cases
+    //One is that there are no children
+    cout << "it is equal my dudes" << endl;
+    if(left == NULL && right == NULL){
+      cout << "there are no children" << endl;
+      //RBT CHECK: Q: What does dealing with the root entail in this case?
+      //RBT CHECK: A: Dealing with the root would mean we would
+      //RBT CHECK: Concerns: We might have to add returns here later, since we are going straight into the replace nodes function. This is fine right now though
+      //If we're dealing with the root node
+      if(past == current){
+        delete current;
+        current = NULL;
+        return new Node*[2]{NULL, NULL};
+      }
+      //RBT CHECK: Q: Is deleting the node good in this case?
+      //RBT CHECK: A: Deleting the node is probably ok in this case, but we need to record the $x$ and potential $c$ values first, to return those.
 
-        //RBT ADDED CODE
-        Node* n = current;
-        Node* c = new Node(-1);
-        //END OF RBT ADDED CODE
+      //RBT ADDED CODE
+      Node* n = current;
+      Node* c = new Node(-1);
+      //END OF RBT ADDED CODE
 
-        //RBT CHECK: Q: Do we actually delete anything?
-        //RBT CHECK: A: No, we have to return to the swap function. The swap function takes care of the below code.
+      //RBT CHECK: Q: Do we actually delete anything?
+      //RBT CHECK: A: No, we have to return to the swap function. The swap function takes care of the below code.
+
+      //RBT REMOVED CODE
+      ////Then we have to find which child the current deleted node is
+      //if(past->getLeft() == current){
+      //  past->setLeft(NULL);
+      //}else{
+      //  past->setRight(NULL);
+      //}
+      ////Then get rid of the node
+      //delete current;
+      //current = NULL;
+      //return;
+      //END OF RBT REMOVED CODE
+
+      //RBT ADDED CODE
+      return new Node*[2]{n, c};
+      //END OF RBT ADDED CODE
+    }
+    //One is that there is one child
+    //First we have to figure out if the current node is the right or left node
+    //We just have to swap the parent with the child
+    //If there are left children
+    if((left != NULL && right == NULL)){
+      //If we're dealing with the root case
+      if(past == current){
+        //RBT CHECK: Q: Can we freely delete the root as in BST?
+        //RBT CHECK: A: No, because we have to account for recolor. Best to return N and C
 
         //RBT REMOVED CODE
-        ////Then we have to find which child the current deleted node is
-        //if(past->getLeft() == current){
-        //  past->setLeft(NULL);
-        //}else{
-        //  past->setRight(NULL);
-        //}
-        ////Then get rid of the node
+        ////Set the root to the left
         //delete current;
-        //current = NULL;
+        //current = left;
         //return;
         //END OF RBT REMOVED CODE
-
-        //RBT ADDED CODE
-        return new Node*[2]{n, c};
-        //END OF RBT ADDED CODE
-      }
-      //One is that there is one child
-      //First we have to figure out if the current node is the right or left node
-      //We just have to swap the parent with the child
-      //If there are left children
-      if((left != NULL && right == NULL)){
-        //If we're dealing with the root case
-        if(past == current){
-          //RBT CHECK: Q: Can we freely delete the root as in BST?
-          //RBT CHECK: A: No, because we have to account for recolor. Best to return N and C
-
-          //RBT REMOVED CODE
-          ////Set the root to the left
-          //delete current;
-          //current = left;
-          //return;
-          //END OF RBT REMOVED CODE
-
-          //RBT ADDED CODE
-          Node* n = current;
-          Node* c = left;
-          return new Node*[2]{n, c};
-          //END OF RBT ADDED CODE
-        }
-
-        //RBT CHECK: Q: Do we need to swap rn?
-        //RBT CHECK: A: NO, just return N and C!
-
-        //RBT REMOVED CODE
-
-        ////Check if our current is the right or left child of the past
-        //if(past->getRight() == current){
-        //  //If it's the right, then swap the parent's right with current left
-        //  past->setRight(left);
-        //  delete current;
-        //  current = NULL;
-        //}else{
-        //  //If it's the left, then swap the parent's right with current left
-        //  past->setLeft(left);
-        //  delete current;
-        //  current = NULL;
-        //}
-        //return;
 
         //RBT ADDED CODE
         Node* n = current;
         Node* c = left;
         return new Node*[2]{n, c};
         //END OF RBT ADDED CODE
+      }
+
+      //RBT CHECK: Q: Do we need to swap rn?
+      //RBT CHECK: A: NO, just return N and C!
+
+      //RBT REMOVED CODE
+
+      ////Check if our current is the right or left child of the past
+      //if(past->getRight() == current){
+      //  //If it's the right, then swap the parent's right with current left
+      //  past->setRight(left);
+      //  delete current;
+      //  current = NULL;
+      //}else{
+      //  //If it's the left, then swap the parent's right with current left
+      //  past->setLeft(left);
+      //  delete current;
+      //  current = NULL;
+      //}
+      //return;
+
+      //RBT ADDED CODE
+      Node* n = current;
+      Node* c = left;
+      return new Node*[2]{n, c};
+      //END OF RBT ADDED CODE
      
-        //If there are right children
-      }else if((left == NULL && right != NULL)){
-        //If we're dealing with the root case
-        if(past == current){
-          //RBT REMOVED CODE
-          ////Set the root to the right
-          //delete current;
-          //current = right;
-          //return;
-          //END OF RBT REMOVED CODE
-         
-          //RBT ADDED CODE
-          Node* n = current;
-          Node* c = right;
-          return new Node*[2]{n, c};
-          //END OF RBT ADDED CODE
-        }
+      //If there are right children
+    }else if((left == NULL && right != NULL)){
+      //If we're dealing with the root case
+      if(past == current){
         //RBT REMOVED CODE
-        ////Check if our current is the right or left child of the past
-        //if(past->getRight() == current){
-        //  //If it's the right, then swap the parent's right with current right
-        //  past->setRight(right);
-        //  delete current;
-        //  current = NULL;
-        //}else{
-        //  //If it's the left, then swap the parent's right with current right
-        //  past->setLeft(right);
-        //  delete current;
-        //  current = NULL;
-        //}
+        ////Set the root to the right
+        //delete current;
+        //current = right;
         //return;
         //END OF RBT REMOVED CODE
-
+         
         //RBT ADDED CODE
         Node* n = current;
         Node* c = right;
         return new Node*[2]{n, c};
         //END OF RBT ADDED CODE
+      }
+      //RBT REMOVED CODE
+      ////Check if our current is the right or left child of the past
+      //if(past->getRight() == current){
+      //  //If it's the right, then swap the parent's right with current right
+      //  past->setRight(right);
+      //  delete current;
+      //  current = NULL;
+      //}else{
+      //  //If it's the left, then swap the parent's right with current right
+      //  past->setLeft(right);
+      //  delete current;
+      //  current = NULL;
+      //}
+      //return;
+      //END OF RBT REMOVED CODE
+
+      //RBT ADDED CODE
+      Node* n = current;
+      Node* c = right;
+      return new Node*[2]{n, c};
+      //END OF RBT ADDED CODE
        
-        //If there are two children
-      }else{
-        //Then we'll first need to find the next "smallest" or "biggest" node.
-        //We'll implement the smallest this time. This means the the next node to the left, and the farthest to the right
+      //If there are two children
+    }else{
+      //Then we'll first need to find the next "smallest" or "biggest" node.
+      //We'll implement the smallest this time. This means the the next node to the left, and the farthest to the right
 
-        //Start at the left node
-        Node* parent = left;
-        Node* child = left;
-        //Keep going until the very right is reached, keeping track of the parent
-        while(child->getRight() != NULL){
-          //Parent is child, and child is next right
-          parent = child;
-          child = child->getRight();
-        }
-
-        //RBT CHECK: Q: Do we need to actually swap nodes?
-        //RBT CHECK: A: No, we don't actually swap nodes, we can just swap values.
-
-
-
-
-        //RBT REMOVED CODE
-        ////So first the parent and child relationship must be broken off
-        //parent->setRight(NULL);
-        ////Even if there are no children, this should be fine.
-        ////Next, we have to replace the current with the child.
-        //END OF RBT REMOVED CODE
-
-        //RBT REMOVED CODE - I don't think root case matters in this context
-        ////Be wary of root case!
-        //if(past == current){
-        //  //Then we have to ensure the original root's right and left child is preserved, so tie the current child to that right child and left child
-        //  child->setRight(current->getRight());
-        //  //However, what if we have a case where we're tying the next left to the node itself? Well, just check it then!
-        //  if(current->getLeft() != child){
-        //    child->setLeft(current->getLeft());
-        //  }
-        //  delete current;
-        //  current = child;
-        //  return;
-        //}
-        //END OF RBT REMOVED CODE
-
-        //RBT ADDED CODE
-
-        //Let's just swap the values of the current with parent first
-        current->setValue(parent->getValue());
-
-        //END OF RBT ADDED CODE
-
-        //RBT ADDED CODE
-
-        //Now we can just return the Node and child to be swapped. It's gotta be the non nill node if possible, tho
-
-        //I'm pretty sure that here right is guranteed to be nil, so let's just pick the left
-        //********* MAY BE BUGGED **********/
-        return new Node*[2]{child, child->getLeft()};
-
-        //END OF RBT ADDED CODE
-
-
-
-
-
-        //RBT REMOVED CODE
-
-
-
-
-        ////If it's not a root case, then much of the same thing occurs, except we have to take into account the "past" node
-        ////We have to figure out if the "current" node is the right or left of it's parent
-        ////If the current is to the right, just keep that in mind when we're swapping
-        //if(past->getRight() == current){
-        //  //We still have to ensure that the original root's right and left child are preserved
-        //  child->setRight(current->getRight());
-        //  if(current->getLeft() != child){
-        //    child->setLeft(current->getLeft());
-        //  }
-        //  //Set the current equal to the child
-        //  delete current;
-        //  current = child;
-        //  //Then tie in the past to the current
-        //  past->setRight(child);
-        //  return;
-        //  //If the current is to the left, just keep that in mind also
-        //}else{
-        //  //We still have to ensure that the original root's right and left child are preserved
-        //  child->setRight(current->getRight());
-        //  if(current->getLeft() != child){
-        //    child->setLeft(current->getLeft());
-        //  }
-        //  //Set the current equal to the child
-        //  delete current;
-        //  current = child;
-        //  //Then tie in the past to the current
-        //  past->setLeft(child);
-        //  return;
-        //}
-
-
-
-        //END OF RBT REMOVED CODE
+      //Start at the left node
+      Node* parent = left;
+      Node* child = left;
+      //Keep going until the very right is reached, keeping track of the parent
+      while(child->getRight() != NULL){
+        //Parent is child, and child is next right
+        parent = child;
+        child = child->getRight();
       }
+
+      //RBT CHECK: Q: Do we need to actually swap nodes?
+      //RBT CHECK: A: No, we don't actually swap nodes, we can just swap values.
+
+
+
+
+      //RBT REMOVED CODE
+      ////So first the parent and child relationship must be broken off
+      //parent->setRight(NULL);
+      ////Even if there are no children, this should be fine.
+      ////Next, we have to replace the current with the child.
+      //END OF RBT REMOVED CODE
+
+      //RBT REMOVED CODE - I don't think root case matters in this context
+      ////Be wary of root case!
+      //if(past == current){
+      //  //Then we have to ensure the original root's right and left child is preserved, so tie the current child to that right child and left child
+      //  child->setRight(current->getRight());
+      //  //However, what if we have a case where we're tying the next left to the node itself? Well, just check it then!
+      //  if(current->getLeft() != child){
+      //    child->setLeft(current->getLeft());
+      //  }
+      //  delete current;
+      //  current = child;
+      //  return;
+      //}
+      //END OF RBT REMOVED CODE
+
+      //RBT ADDED CODE
+
+      //Let's just swap the values of the current with parent first
+      current->setValue(parent->getValue());
+
+      //END OF RBT ADDED CODE
+
+      //RBT ADDED CODE
+
+      //Now we can just return the Node and child to be swapped. It's gotta be the non nill node if possible, tho
+
+      //I'm pretty sure that here right is guranteed to be nil, so let's just pick the left
+      //********* MAY BE BUGGED **********/
+      return new Node*[2]{child, child->getLeft()};
+
+      //END OF RBT ADDED CODE
+
+
+
+
+
+      //RBT REMOVED CODE
+
+
+
+
+      ////If it's not a root case, then much of the same thing occurs, except we have to take into account the "past" node
+      ////We have to figure out if the "current" node is the right or left of it's parent
+      ////If the current is to the right, just keep that in mind when we're swapping
+      //if(past->getRight() == current){
+      //  //We still have to ensure that the original root's right and left child are preserved
+      //  child->setRight(current->getRight());
+      //  if(current->getLeft() != child){
+      //    child->setLeft(current->getLeft());
+      //  }
+      //  //Set the current equal to the child
+      //  delete current;
+      //  current = child;
+      //  //Then tie in the past to the current
+      //  past->setRight(child);
+      //  return;
+      //  //If the current is to the left, just keep that in mind also
+      //}else{
+      //  //We still have to ensure that the original root's right and left child are preserved
+      //  child->setRight(current->getRight());
+      //  if(current->getLeft() != child){
+      //    child->setLeft(current->getLeft());
+      //  }
+      //  //Set the current equal to the child
+      //  delete current;
+      //  current = child;
+      //  //Then tie in the past to the current
+      //  past->setLeft(child);
+      //  return;
+      //}
+
+
+
+      //END OF RBT REMOVED CODE
     }
+  }
 
-    //If node is greater than search number
-    if(toDelete > inQuestion){
-      if(right != NULL){
-        findRemove(current, right, toDelete);
-      }else{
-        return new Node*[2]{NULL, NULL};
-      }
+  //If node is greater than search number
+  if(toDelete > inQuestion){
+    if(right != NULL){
+      return findRemove(current, right, toDelete);
+    }else{
+      return new Node*[2]{NULL, NULL};
     }
   }
   //RBT ADDED CODE
