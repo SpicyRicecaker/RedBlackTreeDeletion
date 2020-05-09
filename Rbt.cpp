@@ -21,9 +21,10 @@ int getInputType(char* in); //Asks user for whether they want file input or inpu
 void search(Node* root, char* in); //Asks user to enter a number, and returns whether it is in the tree, or the number of occurences
 bool checkOccurence(Node* current, int tosearch); //Returns true if the number is in the tree and false if it is not
 void remove(Node* &current, char* in); //Asks user to enter a number, and that number in the tree
-Node** findRemove(Node* &past, Node* &current, int toDelete);
-void replaceNode(Node* N, Node* C); //Tries to swap n with c
-
+void findRemove(Node* &past, Node* &current, int toDelete);
+void swapNode(Node* &N, Node* &C); //Tries to swap N with C
+void singleNodeDeletion(Node* &N); //Tries to find C of N, see if either N or C are red, and executes the appropriate cases, otherwise goes into the actual delete cases
+void deleteCase1(Node* N); //Case that C is the new root
 
 using namespace std;
 
@@ -74,6 +75,7 @@ int main(){
         case 7:
           //Remove
           remove(root, in);
+          cout << "The current value of root is: " << root->getValue() << "." << endl;
           break;
       }
     }
@@ -433,26 +435,11 @@ void remove(Node* &current, char* in){
   cout << "ROOT NODE" << current->getValue() << endl;
   cout << "VALUE TO DELETE" << atoi(in) << endl;
 
-  Node** temp = findRemove(current, current, atoi(in));
-
-  if(temp[0]!=NULL){
-    cout << "THE NODE TO DELETE (N) IS : " << (temp[0])->getValue() << "." << endl;
-  }else{
-    cout << "THE NODE TO DELETE (N) IS : NULL." << endl;
-  }
-
-  if(temp[1]!=NULL){
-    cout << "THE NODE THAT REPLACES IT (C) IS : " << (temp[1])->getValue() << "." << endl;
-  }else{
-    cout << "THE NODE THAT REPLACES IT (C) IS : NULL." << endl;
-  }
-
-  //Swaps the nodes
-  replaceNode(temp[0],temp[1]);
+  findRemove(current, current, atoi(in));
 }
 
 //Finds the spot to delete the node, and also finds the next node to delete????
-Node** findRemove(Node* &past, Node* &current, int toDelete){
+void findRemove(Node* &past, Node* &current, int toDelete){
   //Let's think through this logically.
   //First we actually have to find the number to delete.
   int inQuestion = current->getValue();
@@ -463,11 +450,11 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
     cout << "LESS" << endl;
     //Check if there is a left node
     if(left != NULL){
-      cout << "RECURSES LEFT" << endl;
-      return findRemove(current, left, toDelete);
+     cout << "RECURSES LEFT" << endl;
+      findRemove(current, left, toDelete);
     }else{
       cout << "WE're DONE" << endl;
-      return new Node*[2]{NULL, NULL};
+      return;
     }
   }
 
@@ -498,14 +485,14 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
       if(past == current){
         delete current;
         current = NULL;
-        return new Node*[2]{NULL, NULL};
+        return;
       }
       //RBT CHECK: Q: Is deleting the node good in this case?
       //RBT CHECK: A: Deleting the node is probably ok in this case, but we need to record the $x$ and potential $c$ values first, to return those.
 
       //RBT ADDED CODE
-      Node* n = current;
-      Node* c = NULL;
+      //Node* n = current;
+      //Node* c = NULL;
       //END OF RBT ADDED CODE
 
       //RBT CHECK: Q: Do we actually delete anything?
@@ -525,7 +512,9 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
       //END OF RBT REMOVED CODE
 
       //RBT ADDED CODE
-      return new Node*[2]{n, c};
+      singleNodeDeletion(current);
+      return;
+
       //END OF RBT ADDED CODE
     }
     //One is that there is one child
@@ -546,9 +535,10 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
         //END OF RBT REMOVED CODE
 
         //RBT ADDED CODE
-        Node* n = current;
-        Node* c = left;
-        return new Node*[2]{n, c};
+        //Node* n = current;
+        //Node* c = left;
+        singleNodeDeletion(current);
+        return;
         //END OF RBT ADDED CODE
       }
 
@@ -572,9 +562,11 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
       //return;
 
       //RBT ADDED CODE
-      Node* n = current;
-      Node* c = left;
-      return new Node*[2]{n, c};
+      //Node* n = current;
+      //Node* c = left;
+      //return new Node*[2]{current, left};
+      singleNodeDeletion(current);
+      return;
       //END OF RBT ADDED CODE
      
       //If there are right children
@@ -589,9 +581,11 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
         //END OF RBT REMOVED CODE
          
         //RBT ADDED CODE
-        Node* n = current;
-        Node* c = right;
-        return new Node*[2]{n, c};
+        //Node* n = current;
+        //Node* c = right;
+        //return new Node*[2]{current, right};
+        singleNodeDeletion(current);
+        return;
         //END OF RBT ADDED CODE
       }
       //RBT REMOVED CODE
@@ -611,9 +605,11 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
       //END OF RBT REMOVED CODE
 
       //RBT ADDED CODE
-      Node* n = current;
-      Node* c = right;
-      return new Node*[2]{n, c};
+      //Node* n = current;
+      //Node* c = right;
+      //return new Node*[2]{current, right};
+      singleNodeDeletion(current);
+      return;
       //END OF RBT ADDED CODE
        
       //If there are two children
@@ -672,7 +668,9 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
 
       //I'm pretty sure that here right is guranteed to be nil, so let's just pick the left
       //********* MAY BE BUGGED **********/
-      return new Node*[2]{child, child->getLeft()};
+      //return new Node*[2]{child, child->getLeft()};
+      singleNodeDeletion(child);
+      return;
 
       //END OF RBT ADDED CODE
 
@@ -724,33 +722,42 @@ Node** findRemove(Node* &past, Node* &current, int toDelete){
   //If node is greater than search number
   if(toDelete > inQuestion){
     if(right != NULL){
-      return findRemove(current, right, toDelete);
+      findRemove(current, right, toDelete);
     }else{
-      return new Node*[2]{NULL, NULL};
+      return;
     }
   }
   //RBT ADDED CODE
   //HOPEFULLY THIS NEVER HAPPENS, I HOPE THIS DOESN'T SCREW UP ANYTHING THX
-  return new Node*[2]{NULL, NULL};
+  return;
   //END OF RBT ADDED CODE
 }
 
-void replaceNode(Node* N, Node* C) {
+void swapNode(Node* &N, Node* &C) {
   //I guess if N is NULL we have nothing to do
   if(N == NULL){
+    cout << "N is NULL" << endl;
     return;
   }
   //Then if C is NULL, we'll just make a dummy black node for now
   if(C == NULL){
+    cout << "C is NULL" << endl;
     //Make its value -1, an invalid value
     C = new Node(-1);
     //Then set its color to black
     C->setColor(false);
   }
-  //Set the child's parent to N's current paretn
+  //Set the child's parent to N's current parent
   C->setParent(N->getParent());
+  //Consider root case
+  if(N->getParent() == NULL){
+  cout << "N's VALUE IS:" <<  N->getValue() << endl;
+  cout << "C's VALUE IS:" <<  C->getValue() << endl;
+  N = C;
+  cout << "N's VALUE IS:" <<  N->getValue() << endl;
+  cout << "C's VALUE IS:" <<  C->getValue() << endl;
   //If N is the left child of its parent
-  if (N == N->getParent()->getLeft()) {
+  }else if (N == N->getParent()->getLeft()) {
     //Set the parent's new left to C
     N->getParent()->setLeft(C);
   //If N is the right child of its parent
@@ -758,4 +765,50 @@ void replaceNode(Node* N, Node* C) {
     //Set the parent's new right to C
     N->getParent()->setRight(C);
   }
+}
+
+//Tries to see if either N or C are red, and executes the appropriate cases, otherwise goes into the actual delete cases
+void singleNodeDeletion(Node* &N){
+  //Again, if N is NULL get out
+  if(N == NULL){
+    return;
+  }
+
+  Node* C;
+  if(N->getRight() == NULL){
+    C = N->getLeft();
+  }else{
+    C = N->getRight();
+  }
+
+  swapNode(N, C);
+  //If N's color was black
+  if (N->getColor() == false) {
+    //If Child's color was red
+    if (C->getColor() == true) {
+      C->setColor(false);
+    } else {
+      deleteCase1(C);
+    }
+  }
+
+  //We probably have to do some quick cleanup on this node then (I HOPE THIS DOESN'T SCREW UP LATER RECURSION CASES)
+  if(C->getValue() == -1){
+    if(C->getParent() != NULL){
+      if (C == C->getParent()->getLeft()) {
+        //Set the parent's new left to NULL
+        C->getParent()->setLeft(NULL);
+        //If C is the right child of its parent
+      } else {
+        //Set the parent's new right to NULL
+        C->getParent()->setRight(NULL);
+      }
+    }
+  }
+  //delete N;
+}
+
+//Considers the case that N is the new root
+void deleteCase1(Node* N){
+  return;
 }
