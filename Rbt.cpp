@@ -20,7 +20,7 @@ void help(); //Prints list of commands
 int getInputType(char* in); //Asks user for whether they want file input or input from the console
 void search(Node* root, char* in); //Asks user to enter a number, and returns whether it is in the tree, or the number of occurences
 bool checkOccurence(Node* current, int tosearch); //Returns true if the number is in the tree and false if it is not
-void remove(Node* &current, char* in); //Asks user to enter a number, and that number in the tree
+void remove(Node* &current, char* in, Node* &root); //Asks user to enter a number, and that number in the tree
 void findRemove(Node* &past, Node* &current, int toDelete);
 void swapNode(Node* &N, Node* &C); //Tries to swap N with C
 void singleNodeDeletion(Node* &N); //Tries to find C of N, see if either N or C are red, and executes the appropriate cases, otherwise goes into the actual delete cases
@@ -80,7 +80,7 @@ int main(){
           break;
         case 7:
           //Remove
-          remove(root, in);
+          remove(root, in, root);
           break;
       }
     }
@@ -192,7 +192,7 @@ void insert(Node* &root, int toAdd){
   find(root, toAdd);
 
   //Corrects the root after rotations
-  if(root->getParent() != NULL){
+  while(root->getParent() != NULL){
     root = root->getParent();
   }
 }
@@ -430,13 +430,14 @@ void search(Node* root, char* in){
 }
 
 //Asks user to enter a number, and deletes that number in the tree/
-void remove(Node* &current, char* in){
+void remove(Node* &current, char* in, Node* &root){
   //First we need to ask user for the number to remove
   cout << "Please enter the number to remove" << endl;
   //Store into in
   getInput(in);
   //Make sure that the node to delete actually exists
   findRemove(current, current, atoi(in));
+
 }
 
 //Finds the spot to delete the node, and also finds the next node to delete????
@@ -730,6 +731,7 @@ void findRemove(Node* &past, Node* &current, int toDelete){
 }
 
 void swapNode(Node* &N, Node* &C) {
+  //Make sure that
   //I guess if N is NULL we have nothing to do
   if(N == NULL){
     return;
@@ -745,13 +747,16 @@ void swapNode(Node* &N, Node* &C) {
   C->setParent(N->getParent());
   //Consider root case
   if(N->getParent() == NULL){
+  cout << "Swapnode, Root case" << endl;
   N = C;
   //If N is the left child of its parent
   }else if (N == N->getParent()->getLeft()) {
+  cout << "Swapnode, N is the left child of its parent" << endl;
     //Set the parent's new left to C
     N->getParent()->setLeft(C);
   //If N is the right child of its parent
   } else {
+  cout << "Swapnode, N is the right child of its parent" << endl;
     //Set the parent's new right to C
     N->getParent()->setRight(C);
   }
@@ -891,10 +896,19 @@ void deleteCase5(Node* &N){
   cout << "case 5, N's parent is " << N->getParent()->getValue() << endl;
   cout << "case 5, sibling's left child is: " << S->getLeft()->getColor() << endl;
   cout << "case 5, sibling's right child is: " << S->getRight()->getColor() << endl;
+  if(N==N->getParent()->getLeft()){
+    cout << "deleteCase 5, N is the left child of parent" << endl;
+  }else if(N==N->getParent()->getRight()){
+    cout << "deleteCase 5, N is the right child of parent" << endl;
+  }
 
   //If S is black
   if(S->getColor() == true){
+    cout << "S color is black" << endl;
     //...and it's left child is red and right child is black, and N is the left child of its parent,
+    cout << "deleteCase5, N's parent is:" << N->getParent()->getValue() << endl;
+    cout << "deleteCase5, N's parent's left is:" << N->getParent()->getLeft()->getValue() << endl;
+    cout << "deleteCase5, N's parent's right is:" << N->getParent()->getRight()->getValue() << endl;
     if((N == N->getParent()->getLeft()) && (S->getRight()->getColor() == true) && (S->getLeft()->getColor() == false)){
       cout << "S is black, S left is red, S right is black, and N left child of parent" << endl;
       //Swap S and new P colors
@@ -902,7 +916,7 @@ void deleteCase5(Node* &N){
       S->getLeft()->setColor(true);
       //Then rotate right so that S's left child becomes the parent of S and S's right child is stil the child of S
       S->rotateRight();
-      //... or it's left child is black and right child is red, and N is the right child of its parent
+      //... or it's right child is black and right child is red, and N is the right child of its parent
     }else if((N == N->getParent()->getRight()) && (S->getLeft()->getColor() == true) && (S->getRight()->getColor() == false)){
       cout << "S is black, S left is red, S right is black, N left child of parent" << endl;
       //Swap S and new P colors
@@ -922,17 +936,20 @@ void deleteCase6(Node* &N){
 
   //Swap P and S colors
   S->setColor(N->getParent()->getColor());
+  cout << "DELETECASE6: S's COLOR IS" << S->getColor() << "." << endl;
   N->getParent()->setColor(true);
 
   //If N is the left child of P
   if (N == N->getParent()->getLeft()){
+    cout << "DELETECASE6: N IS THE LEFT CHILD OF PARENT" << endl;
     //Make S's right child color black
     S->getRight()->setColor(true);
     //Rotate left through N's parent so that P's parent is S
     N->getParent()->rotateLeft();
     //If N is the right child of P
   } else {
-    //Make S's right child color black
+    cout << "DELETECASE6: N IS THE RIGHT CHILD OF PARENT" << endl;
+    //Make S's left child color black
     S->getLeft()->setColor(true);
     //Rotate right through N's parent so that P's parent is S
     N->getParent()->rotateLeft();
