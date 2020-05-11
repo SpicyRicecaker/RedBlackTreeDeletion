@@ -88,8 +88,13 @@ Node* Node::getUncle(){
 }
 
 
-//Getters and setters for color
+//Getters and setters for color,
+//FALSE IS RED, TRUE IS BLACK, 0 IS FALSE, 1 IS TRUE
 bool Node::getColor(){
+  if(this == NULL){
+    std::cout << "hey this is null haha" << std::endl;
+    return true;
+  }
   return color;
 }
 
