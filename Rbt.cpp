@@ -25,7 +25,8 @@ void findRemove(Node* &past, Node* &current, int toDelete);
 void swapNode(Node* &N, Node* &C); //Tries to swap N with C
 void singleNodeDeletion(Node* &N); //Tries to find C of N, see if either N or C are red, and executes the appropriate cases, otherwise goes into the actual delete cases
 void deleteCase1(Node* &N); //Case that C is the new root
-void deleteCase2(Node* &N);
+void deleteCase2(Node* &N); //Case that S is red
+void deleteCase3(Node* &N); //Case that P, S, and S's children are black.
 
 using namespace std;
 
@@ -809,6 +810,7 @@ void singleNodeDeletion(Node* &N){
   //delete N;
 }
 
+//WITH HELP FROM WIKIPEDIA
 //If N is the new root then no need to keep correcting
 void deleteCase1(Node* &N){
   cout << "N is the new root." << endl;
@@ -818,7 +820,28 @@ void deleteCase1(Node* &N){
   return;
 }
 
-///
+//WITH HELP FROM WIKIPEDIA
+//"If the sibling is red then swap parent and sibling colors and rotate through the parent, turning S into N's grandparent."
 void deleteCase2(Node* &N){
   cout << "S is red" << endl;
+  Node* S = N->getSibling();
+
+  //If sibling's color is red
+  if(S->getColor() == true){
+    //Swap colors
+    N->getParent()->setColor(true);
+    S->setColor(false);
+    //Rotate to turn S into N's grandparent
+    if(N == N->getParent()->getLeft()){
+      N->getParent()->rotateLeft();
+    }else{
+      N->getParent()->rotateRight();
+    }
+  }
+  deleteCase3(N);
+}
+
+//Case that P, S, and S's children are black.
+void deleteCase3(Node* &N){
+
 }
