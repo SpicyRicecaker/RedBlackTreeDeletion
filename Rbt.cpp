@@ -850,7 +850,7 @@ void deleteCase3(Node* &N){
   Node* S = N->getSibling();
 
   //If Child's parent, Sibling and it's children are all black
-  if((N->getParent()->getColor() == true) && (S->getColor() == false) && (S->getLeft()->getColor() == true) && (S->getRight()->getColor() == true)){
+  if((N->getParent()->getColor() == true) && (S->getColor() == true) && (S->getLeft()->getColor() == true) && (S->getRight()->getColor() == true)){
     cout << "Child's parent, sibling, and it's children are all black" << endl;
     //Repaint S red
     S->setColor(false);
