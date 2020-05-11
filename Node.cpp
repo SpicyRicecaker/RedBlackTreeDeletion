@@ -122,8 +122,7 @@ void Node::rotateLeft(){
       //Set the parent's left to the pivot
       parent->setLeft(right);
       //If the root was the right subtree
-    }else{
-      //Set the parent's right to the pivot
+    }else{//Set the parent's right to the pivot
       parent->setRight(right);
     }
     //Set the pivot's parent to the parent
@@ -142,22 +141,9 @@ void Node::rotateLeft(){
     right->setParent(NULL);
     //Set the root's parent to be the pivot (right)
     right->setLeft(this);
-    if(parent!=NULL){
-    std::cout << "Parent value before setting parent to right is: " << parent->getValue() << std::endl;
-    }
     parent = right;
-    if(parent!=NULL){
-    std::cout << "Parent value after setting parent to right is: " << parent->getValue() << std::endl;
-    }
     //Then finally, the pivot's left subtree becomes the old root's new right subtree
-    if(right!=NULL){
-    std::cout << "Right value before setting is: " << right->getValue() << std::endl;
-    }
     right = leftSubtree;
-    if(right!=NULL){
-    std::cout << "Right value after setting is: " << right->getValue() << std::endl;
-    }
-    leftSubtree->setParent(this);
     if(leftSubtree != NULL){
       leftSubtree->setParent(this);
     }
@@ -191,7 +177,6 @@ void Node::rotateRight(){
     parent = left;
     //Then finally, the pivot's left subtree becomes the old root's new right subtree
     left = rightSubtree;
-    rightSubtree->setParent(this);
     if(rightSubtree != NULL){
       rightSubtree->setParent(this);
     }
@@ -201,23 +186,9 @@ void Node::rotateRight(){
     left->setParent(NULL);
     //Set the root's parent to be the pivot (left)
     left->setRight(this);
-    if(parent!=NULL){
-      std::cout << "Parent value before setting parent to left is: " << parent->getValue() << std::endl;
-    }
     parent = left;
-    if(parent!=NULL){
-      std::cout << "Parent value after setting parent to left is: " << parent->getValue() << std::endl;
-    }
     //Then finally, the pivot's left subtree becomes the old root's new right subtree
-    if(left!=NULL){
-
-    std::cout << "Left value before setting is: " << left->getValue() << std::endl;
-    }
     left = rightSubtree;
-    if(left!=NULL){
-    std::cout << "Left value before setting is: " << left->getValue() << std::endl;
-    }
-    rightSubtree->setParent(this);
     if(rightSubtree != NULL){
       rightSubtree->setParent(this);
     }

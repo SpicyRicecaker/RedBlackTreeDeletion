@@ -798,36 +798,9 @@ Node* singleNodeDeletion(Node* &N){
     }
   }
 
-  if(temp!=NULL){
-    cout << "TEMP(ROOT) STATS: VALUE: " << temp->getValue() << "."<< endl;
-    if(temp->getParent()==NULL){
-      cout << "TEMP(ROOT) STATS: PARENT: NULL."<< endl;
-    }
-    if(temp->getLeft()!=NULL){
-      cout << "TEMP(ROOT) STATS: LEFT: " << temp->getLeft()->getValue() << "."<< endl;
-      cout << "TEMP(ROOT) STATS: LEFT PARENT IS: " << temp->getLeft()->getParent()->getValue() << "." << endl;
-      cout << "TEMP(ROOT) STATS: LEFT RIGHT PARENT IS: " << temp->getLeft()->getRight()->getParent()->getValue() << "." << endl;
-    }else{
-      cout << "TEMP(ROOT) STATS: LEFT: NULL" << endl;
-    }
-    if(temp->getRight()!=NULL){
-      cout << "TEMP(ROOT) STATS: RIGHT: " << temp->getRight()->getValue() << "."<< endl;
-      cout << "TEMP(ROOT) STATS: RIGHT PARENT IS: " << temp->getRight()->getParent()->getValue() << "." << endl;
-      cout << "TEMP(ROOT) STATS: RIGHT RIGHT PARENT IS: " << temp->getRight()->getRight()->getParent()->getValue() << "." << endl;
-    }else{
-      cout << "TEMP(ROOT) STATS: RIGHT: NULL" << endl;
-    }
-  }else{
-    cout << "TEMP(ROOT) STATS: VALUE: NULL." << endl;
-  }
-  cout << "AFTER DELETING C__________________________-" << endl;
-
-
-
   //We probably have to do some quick cleanup on this node then (I HOPE THIS DOESN'T SCREW UP LATER RECURSION CASES)
 
 
-  /*
   if(C->getValue() == -1){
     if(C->getParent() != NULL){
       if (C == C->getParent()->getLeft()) {
@@ -840,30 +813,7 @@ Node* singleNodeDeletion(Node* &N){
       }
     }
   }
-  */
 
-  if(temp!=NULL){
-    cout << "TEMP(ROOT) STATS: VALUE: " << temp->getValue() << "."<< endl;
-    if(temp->getParent()==NULL){
-      cout << "TEMP(ROOT) STATS: PARENT: NULL."<< endl;
-    }
-    if(temp->getLeft()!=NULL){
-      cout << "TEMP(ROOT) STATS: LEFT: " << temp->getLeft()->getValue() << "."<< endl;
-      cout << "TEMP(ROOT) STATS: LEFT PARENT IS: " << temp->getLeft()->getParent()->getValue() << "." << endl;
-      cout << "TEMP(ROOT) STATS: LEFT RIGHT PARENT IS: " << temp->getLeft()->getRight()->getParent()->getValue() << "." << endl;
-    }else{
-      cout << "TEMP(ROOT) STATS: LEFT: NULL" << endl;
-    }
-    if(temp->getRight()!=NULL){
-      cout << "TEMP(ROOT) STATS: RIGHT: " << temp->getRight()->getValue() << "."<< endl;
-      cout << "TEMP(ROOT) STATS: RIGHT PARENT IS: " << temp->getRight()->getParent()->getValue() << "." << endl;
-      cout << "TEMP(ROOT) STATS: RIGHT RIGHT PARENT IS: " << temp->getRight()->getRight()->getParent()->getValue() << "." << endl;
-    }else{
-      cout << "TEMP(ROOT) STATS: RIGHT: NULL" << endl;
-    }
-  }else{
-    cout << "TEMP(ROOT) STATS: VALUE: NULL." << endl;
-  }
   //delete N;
   return temp;
 }
