@@ -443,18 +443,16 @@ void remove(Node* &current, char* in, Node* &root){
 //Finds the spot to delete the node, and also finds the next node to delete????
 void findRemove(Node* &past, Node* &current, int toDelete){
   //Let's think through this logically.
+  if(current == NULL){
+	  return;
+  }
   //First we actually have to find the number to delete.
   int inQuestion = current->getValue();
   Node* left = current->getLeft();
   Node* right = current->getRight();
   //If node is less than search number
   if(toDelete < inQuestion){
-    //Check if there is a left node
-    if(left != NULL){
-      findRemove(current, left, toDelete);
-    }else{
-      return;
-    }
+    findRemove(current, left, toDelete);
   }
 
 
@@ -718,11 +716,7 @@ void findRemove(Node* &past, Node* &current, int toDelete){
 
   //If node is greater than search number
   if(toDelete > inQuestion){
-    if(right != NULL){
       findRemove(current, right, toDelete);
-    }else{
-      return;
-    }
   }
   //RBT ADDED CODE
   //HOPEFULLY THIS NEVER HAPPENS, I HOPE THIS DOESN'T SCREW UP ANYTHING THX
