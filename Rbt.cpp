@@ -60,7 +60,11 @@ int main(){//Variable that stores user input
           break;
         case 3:
           //Print
-          print(root, 0);
+          if(root == NULL){
+            cout << "The tree is empty!" << endl;
+          }else{
+            print(root, 0);
+          }
           //Reset text color after print
           cout << "\033[0m\n" << endl;
           break;
@@ -292,7 +296,7 @@ void print(Node* current, int depth){
 
 //Prints a list of all commands and their functions
 void help(){
-  cout << "\n----------\nEnter \"add\" to add a number to the tree,\n\"print\" to print the tree,\nor \"quit\" to exit the modding tree phase.\nType \"help\" again to reprint this list.\n----------\n" << endl;
+  cout << "\n----------\nEnter \"add\" to add a number to the tree,\n\"print\" to print the tree,\n\"search\" to check if a number is in the tree,\n\"remove\" to remove a number from the tree, or \n\"quit\" to exit the modding tree phase.\nType \"help\" again to reprint this list.\n----------\n" << endl;
 }
 
 //Root case
@@ -424,7 +428,7 @@ void search(Node* root, char* in){
   if(checkOccurence(root, atoi(in))){
     cout << "\"" << in << "\"" << " is present in this tree." << endl;
   }else{
-    cout << "Could not find any occurences of \"" << in << "\"" << " in this tree." << endl;
+    cout << "Could not find any occurences of \"" << in << "\" in this tree." << endl;
   }
 }
 
@@ -435,14 +439,20 @@ void remove(Node* &current, char* in, Node* &root){
   //Store into in
   getInput(in);
   //Make sure that the node to delete actually exists
-  root = findRemove(current, current, atoi(in));
+  Node* temp = findRemove(current, current, atoi(in));
+  if(temp == NULL || temp->getValue() != -1){
+    root = temp;
+    cout << "Successfully deleted \"" << in << "\" from the tree." << endl;
+  }else{
+    cout << "Did not delete any instances of \""<< in << "\" in the RBT because the number was not found." << endl;
+  }
 }
 
 //Finds the spot to delete the node, and also finds the next node to delete????
 Node* findRemove(Node* &past, Node* &current, int toDelete){
   //Let's think through this logically.
   if(current == NULL){
-	  return NULL;
+	  return new Node(-1);
   }
   //First we actually have to find the number to delete.
   int inQuestion = current->getValue();
