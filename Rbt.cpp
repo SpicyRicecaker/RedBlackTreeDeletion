@@ -574,6 +574,7 @@ Node* findRemove(Node* &past, Node* &current, int toDelete){
         //Node* n = current;
         //Node* c = right;
         //return new Node*[2]{current, right};
+        cout << "current is: " << current->getValue() << endl;
         return singleNodeDeletion(current);
         //END OF RBT ADDED CODE
       }
@@ -776,6 +777,7 @@ Node* singleNodeDeletion(Node* &N){
   }
 
   swapNode(N, C);
+  cout << "N is(after swap):" << N->getValue() << endl;
   cout << "C is:" << C->getValue() << endl;
   //If N's color was black
   if (NColor == true) {
@@ -790,12 +792,8 @@ Node* singleNodeDeletion(Node* &N){
   }
 
   Node* temp = C;
-  if(temp->getParent() == NULL){
-    temp = NULL;
-  }else{
-    while(temp->getParent()!=NULL){
-      temp = temp->getParent();
-    }
+  while(temp->getParent()!=NULL){
+    temp = temp->getParent();
   }
 
   //We probably have to do some quick cleanup on this node then (I HOPE THIS DOESN'T SCREW UP LATER RECURSION CASES)
