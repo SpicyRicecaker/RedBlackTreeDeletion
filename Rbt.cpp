@@ -27,6 +27,9 @@ void singleNodeDeletion(Node* &N); //Tries to find C of N, see if either N or C 
 void deleteCase1(Node* &N); //Case that C is the new root
 void deleteCase2(Node* &N); //Case that S is red
 void deleteCase3(Node* &N); //Case that P, S, and S's children are black.
+void deleteCase4(Node* &N); // S and S's children are black, P is red.
+void deleteCase5(Node* &N); // S is black, S's left child is red, S's right child is black, and N is the left child of its parent
+void deleteCase6(Node* &N);
 
 using namespace std;
 
@@ -842,6 +845,58 @@ void deleteCase2(Node* &N){
 }
 
 //Case that P, S, and S's children are black.
+//MIGHT have to consider NULL cases for children???
 void deleteCase3(Node* &N){
+  Node* S = N->getSibling();
 
+  //If Child's parent, Sibling and it's children are all black
+  if((N->getParent()->getColor() == false) && (S->getColor() == false) && (S->getLeft()->getColor() == false) && (S->getRight()->getColor() == false)){
+    //Repaint S red
+    S->setColor(true);
+    //Rebalance the tree starting from the first case
+    Node* P = N->getParent();
+    deleteCase1(P);
+  }else{
+    deleteCase4(N);
+  }
+}
+
+// S and S's children are black, P is red.
+void deleteCase4(Node* &N){
+  Node* S = N->getSibling();
+
+  //If sibling and it's children are black and p is red
+  if((N->getParent()->getColor() == true) && (S->getColor() == false) && (S->getLeft()->getColor() == false) && (S->getRight()->getColor() == false)){
+    //Exchange S and P colors
+    S->setColor(true);
+    N->getParent()->setColor(false);
+  }else{
+    //Otherwise go onto case 5
+    deleteCase5(N);
+  }
+}
+
+// S is black, S's left child is red, S's right child is black, and N is the left child of its parent
+void deleteCase5(Node* &N){
+  Node* S = N->getSibling();
+
+  //If S is black
+  if(S->getColor() == false){
+    //...and it's left child is red and right child is black, and N is the left child of its parent,
+    if((N == N->getParent()->getLeft()) && (S->getRight()->getColor() == false) && (S->getLeft()->getColor() == true)){
+      //Swap S and new P colors
+      S->setColor(true);
+      S->getLeft()->setColor(false);
+      //Then rotate right so that S's left child becomes the parent of S and S's right child is stil the child of S
+      S->rotateRight();
+      //... or it's left child is black and right child is red, and N is the right child of its parent
+    }else if((N == N->getParent()->getRight()) && (S->getLeft()->getColor() == false) && (S->getRight()->getColor() == true)){
+      //Swap S and new P colors
+      S->setColor(true);
+      S->getRight()->setColor(false);
+      //Then rotate left so that S's right child becomes the parent of S and S's left child is still the child of S
+      S->rotateLeft();
+    }
+  }
+  deleteCase6(N);
 }
