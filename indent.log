@@ -1,0 +1,12 @@
+INFO: latexindent version 3.8.1, 2020-05-05, a script to indent .tex files
+      latexindent lives here: /usr/local/texlive/2020/texmf-dist/scripts/latexindent/
+      Fri May  8 23:09:17 2020
+      Reading input from STDIN
+INFO: Processing switches:
+INFO: Directory for backup files and indent.log: .
+INFO: YAML settings read: defaultSettings.yaml
+      Reading defaultSettings.yaml from /usr/local/texlive/2020/texmf-dist/scripts/latexindent/defaultSettings.yaml
+INFO: YAML settings read: indentconfig.yaml or .indentconfig.yaml
+      Home directory is /home/spicy (didn't find either indentconfig.yaml or .indentconfig.yaml)
+      To specify user settings you would put indentconfig.yaml here: /home/spicy/indentconfig.yaml
+      Alternatively, you can use the hidden file .indentconfig.yaml as: /home/spicy/.indentconfig.yaml

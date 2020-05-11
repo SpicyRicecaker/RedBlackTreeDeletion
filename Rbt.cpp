@@ -24,7 +24,8 @@ void remove(Node* &current, char* in); //Asks user to enter a number, and that n
 void findRemove(Node* &past, Node* &current, int toDelete);
 void swapNode(Node* &N, Node* &C); //Tries to swap N with C
 void singleNodeDeletion(Node* &N); //Tries to find C of N, see if either N or C are red, and executes the appropriate cases, otherwise goes into the actual delete cases
-void deleteCase1(Node* N); //Case that C is the new root
+void deleteCase1(Node* &N); //Case that C is the new root
+void deleteCase2(Node* &N);
 
 using namespace std;
 
@@ -808,7 +809,16 @@ void singleNodeDeletion(Node* &N){
   //delete N;
 }
 
-//Considers the case that N is the new root
-void deleteCase1(Node* N){
+//If N is the new root then no need to keep correcting
+void deleteCase1(Node* &N){
+  cout << "N is the new root." << endl;
+  if(N->getParent() != NULL){
+    deleteCase2(N);
+  }
   return;
+}
+
+///
+void deleteCase2(Node* &N){
+  cout << "S is red" << endl;
 }
