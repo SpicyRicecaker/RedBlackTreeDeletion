@@ -946,7 +946,6 @@ void deleteCase6(Node* &N){
     //Make S's left child color black
     S->getLeft()->setColor(true);
     //Rotate right through N's parent so that P's parent is S
-    N->getParent()->rotateLeft();
     N->getParent()->rotateRight();
   }
 }
