@@ -1,3 +1,8 @@
+/*
+  Author: Shengdong Li
+  Date: 5/11/20
+  Red Black Tree Deletion: A really cancer project that includes the search function to search for nodes in the tree and also the delete function to delete a number from the tree.
+ */
 #include <iostream>
 #include <cstring>
 #include <fstream>
@@ -35,7 +40,8 @@ void deleteCase6(Node* &N); // S is black, S's right child is red, and N is the 
 using namespace std;
 
 //Main program
-int main(){//Variable that stores user input
+int main(){
+  //Variable that stores user input
   char inArr[999];
   char* in = &inArr[0];
 
@@ -94,7 +100,14 @@ int main(){//Variable that stores user input
       in[0] = toupper(in[0]);
       if(strcmp(in, "Y") == 0){
         //Reset variables
-        root = NULL;
+        while(root!=NULL){
+          Node* temp = findRemove(root, root, root->getValue());
+          if(temp == NULL || temp->getValue() != -1){
+            root = temp;
+          }else{
+            break;
+          }
+        }
         break;
       }else if(strcmp(in, "N") == 0){
         running = !running;
