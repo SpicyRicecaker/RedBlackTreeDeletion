@@ -99,7 +99,7 @@ int main(){
       getInput(in);
       in[0] = toupper(in[0]);
       if(strcmp(in, "Y") == 0){
-        //Reset variables
+        //Empty the tree
         while(root!=NULL){
           Node* temp = findRemove(root, root, root->getValue());
           if(temp == NULL || temp->getValue() != -1){
@@ -309,7 +309,7 @@ void print(Node* current, int depth){
 
 //Prints a list of all commands and their functions
 void help(){
-  cout << "\n----------\nEnter \"add\" to add a number to the tree,\n\"print\" to print the tree,\n\"search\" to check if a number is in the tree,\n\"remove\" to remove a number from the tree, or \n\"quit\" to exit the modding tree phase.\nType \"help\" again to reprint this list.\n----------\n" << endl;
+  cout << "\n----------\nEnter \"add\" to add a number to the tree,\n\"print\" to print the tree,\n\"search\" to check if a number is in the tree,\n\"remove\" to remove a number from the tree, or \n\"quit\" to exit the modding tree phase.\nAlso note that yellow = black in this tree, this was chosen for better readability.\nType \"help\" again to reprint this list.\n----------\n" << endl;
 }
 
 //Root case
@@ -451,20 +451,25 @@ void remove(Node* &current, char* in, Node* &root){
   cout << "Please enter the number to remove" << endl;
   //Store into in
   getInput(in);
-  //Make sure that the node to delete actually exists
+  //Store the returning root in temp
   Node* temp = findRemove(current, current, atoi(in));
+  //If temp is NULL or a match was found
   if(temp == NULL || temp->getValue() != -1){
+    //Set root equal to the new temp
     root = temp;
     cout << "Successfully deleted \"" << in << "\" from the tree." << endl;
   }else{
+    //Otherwise notify the user that nothing happened
     cout << "Did not delete any instances of \""<< in << "\" in the RBT because the number was not found." << endl;
   }
 }
 
-//Finds the spot to delete the node, and also finds the next node to delete????
+//Tries to execute regular rbt delete until the node in question becomes a node with 1 or less children, until which the node is deleted and put through deletion cases.
 Node* findRemove(Node* &past, Node* &current, int toDelete){
   //Let's think through this logically.
+  //If the current node is null that means the number has not been found
   if(current == NULL){
+    //Return filler node with meaning that a node has not been found
 	  return new Node(-1);
   }
   //First we actually have to find the number to delete.
@@ -473,6 +478,7 @@ Node* findRemove(Node* &past, Node* &current, int toDelete){
   Node* right = current->getRight();
   //If node is less than search number
   if(toDelete < inQuestion){
+    //Recurse left
     return findRemove(current, left, toDelete);
   }
 
@@ -490,6 +496,7 @@ Node* findRemove(Node* &past, Node* &current, int toDelete){
 
 
   //If node is equal to search number
+  //A lot of stuff here can probably be cleaned up but has been left in here for *compatability* purposes
   if(toDelete == inQuestion){
     //There are three possible cases
     //One is that there are no children
@@ -740,6 +747,7 @@ Node* findRemove(Node* &past, Node* &current, int toDelete){
   //END OF RBT ADDED CODE
 }
 
+//This function takes in N and C and attempts to replace them, making NIL nodes black filler nodes with -1 value
 void swapNode(Node* &N, Node* &C) {
   //Make sure that
   //I guess if N is NULL we have nothing to do
@@ -799,6 +807,7 @@ Node* singleNodeDeletion(Node* &N){
     CColor = true;
   }
 
+  //Swap the N with C!
   swapNode(N, C);
   //cout << "N is(after swap):" << N->getValue() << endl;
   //cout << "C is:" << C->getValue() << endl;
@@ -814,15 +823,19 @@ Node* singleNodeDeletion(Node* &N){
     }
   }
 
+  //This is a really important snippet of code.
+  //Since C is always attached to something ether as a nil black node or a node with a value, you can always use it to trace back to the root
+  //Define temp as C
   Node* temp = C;
+  //While the parent is not null
   while(temp->getParent()!=NULL){
+    //Keep going up. This should result in the root
     temp = temp->getParent();
   }
 
-  //We probably have to do some quick cleanup on this node then (I HOPE THIS DOESN'T SCREW UP LATER RECURSION CASES)
-
-
+  //This cleans up the black filler nodes with -1 value!
   if(C->getValue() == -1){
+    //Make sure that parent isn't NULL
     if(C->getParent() != NULL){
       if (C == C->getParent()->getLeft()) {
         //Set the parent's new left to NULL
